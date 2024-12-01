@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birth Date Ranking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        #container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Find Your Ranking</h1>
+        <form id="birthForm">
+            <label for="birthMonth">Birth Month:</label>
+            <input type="number" id="birthMonth" min="1" max="12" required>
+            
+            <label for="birthDay">Birth Date:</label>
+            <input type="number" id="birthDay" min="1" max="31" required>
+            
+            <button type="submit">Get Ranking</button>
+        </form>
+
+        <p id="result"></p>
+    </div>
+
+    <script>
+        const form = document.getElementById('birthForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const month = document.getElementById('birthMonth').value;
+            const day = document.getElementById('birthDay').value;
+
+            try {
+                const response = await fetch('rankings.json');
+                const rankings = await response.json();
+                
+                const result = rankings.find(item => 
+                    item.birthMonth == month && item.birthDay == day
+                );
+
+                if (result) {
+                    document.getElementById('result').innerText = `Your ranking: ${result.ranking}`;
+                } else {
+                    document.getElementById('result').innerText = 'No ranking found';
+                }
+            } catch (error) {
+                document.getElementById('result').innerText = 'Error! Please give a valid birth date and month';
+            }
+        });
+    </script>
+</body>
+</html>
